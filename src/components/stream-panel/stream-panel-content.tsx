@@ -24,8 +24,8 @@ export function StreamPanelContent() {
   if (isLoading && logs.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-        <IconLoader2 className="h-4 w-4 animate-spin mr-2" />
-        Loading logs...
+        <IconLoader2 className="size-4 animate-spin mr-2" />
+        Loading logs…
       </div>
     );
   }
@@ -45,8 +45,8 @@ export function StreamPanelContent() {
       ))}
       {isRunning && (
         <div className="flex items-center gap-2 py-2 px-3 text-muted-foreground">
-          <IconLoader2 className="h-3 w-3 animate-spin" />
-          <span className="text-sm">Processing...</span>
+          <IconLoader2 className="size-3 animate-spin" />
+          <span className="text-sm">Processing…</span>
         </div>
       )}
       <div ref={(el) => el?.scrollIntoView()} />
@@ -64,7 +64,7 @@ const ActivityEntry = memo(function ActivityEntry({ entry }: { entry: ClientLogE
     <div className="flex items-start gap-2 py-2 px-3 border-b border-dashed border-muted hover:bg-muted/50 transition-colors">
       <div
         className={cn(
-          "w-4 h-4 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5",
+          "size-4 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5",
           color
         )}
       >
@@ -73,7 +73,12 @@ const ActivityEntry = memo(function ActivityEntry({ entry }: { entry: ClientLogE
 
       <div className="flex-1 min-w-0 text-sm">
         {isRichContent ? (
-          <div className={cn("prose-terminal-compact max-w-none", entry.type === "thinking" && "italic opacity-60")}>
+          <div
+            className={cn(
+              "prose-terminal-compact max-w-none",
+              entry.type === "thinking" && "italic opacity-60"
+            )}
+          >
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.content}</ReactMarkdown>
           </div>
         ) : (
@@ -94,7 +99,7 @@ const ActivityEntry = memo(function ActivityEntry({ entry }: { entry: ClientLogE
 });
 
 function getLogIcon(type: LogEntryType) {
-  const cls = "h-2.5 w-2.5";
+  const cls = "size-2.5";
   switch (type) {
     case "system":
       return <IconSettings className={cls} />;
@@ -113,7 +118,7 @@ function getLogIcon(type: LogEntryType) {
     case "redirect":
       return <IconExternalLink className={cls} />;
     default:
-      return <div className="h-1.5 w-1.5 rounded-full bg-current opacity-40" />;
+      return <div className="size-1.5 rounded-full bg-current opacity-40" />;
   }
 }
 

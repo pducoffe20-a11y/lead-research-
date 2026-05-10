@@ -11,59 +11,23 @@ import {
 import { toast } from "sonner";
 import { savePromptByType } from "@/lib/tauri/commands";
 import type { PromptType } from "@/lib/tauri/types";
+import type { PromptContents } from "@/pages/prompt";
 
 interface PromptEditorProps {
-  companyPromptContent: string;
-  personPromptContent: string;
-  companyOverviewContent: string;
-  conversationTopicsContent: string;
+  prompts: PromptContents;
 }
 
-export function PromptEditor({
-  companyPromptContent,
-  personPromptContent,
-  companyOverviewContent,
-  conversationTopicsContent,
-}: PromptEditorProps) {
+export function PromptEditor({ prompts }: PromptEditorProps) {
   const [activeTab, setActiveTab] = useState<PromptType>("company_overview");
-  const [companyContent, setCompanyContent] = useState(companyPromptContent);
-  const [personContent, setPersonContent] = useState(personPromptContent);
-  const [overviewContent, setOverviewContent] = useState(companyOverviewContent);
-  const [conversationContent, setConversationContent] = useState(conversationTopicsContent);
+  const [contents, setContents] = useState<PromptContents>(() => prompts);
   const [isPending, startTransition] = useTransition();
   const [isSaving, setIsSaving] = useState(false);
 
-  const getCurrentContent = () => {
-    switch (activeTab) {
-      case "company":
-        return companyContent;
-      case "person":
-        return personContent;
-      case "company_overview":
-        return overviewContent;
-      case "conversation_topics":
-        return conversationContent;
-    }
-  };
+  const currentContent = contents[activeTab];
 
   const setCurrentContent = (value: string) => {
-    switch (activeTab) {
-      case "company":
-        setCompanyContent(value);
-        break;
-      case "person":
-        setPersonContent(value);
-        break;
-      case "company_overview":
-        setOverviewContent(value);
-        break;
-      case "conversation_topics":
-        setConversationContent(value);
-        break;
-    }
+    setContents((prev) => ({ ...prev, [activeTab]: value }));
   };
-
-  const currentContent = getCurrentContent();
 
   const handleSave = () => {
     setIsSaving(true);
@@ -105,7 +69,7 @@ export function PromptEditor({
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <TabIcon className="w-4 h-4" />
+                <TabIcon className="size-4" />
                 {tab.label}
               </button>
             );
@@ -183,9 +147,9 @@ export function PromptEditor({
             <div className="flex items-center gap-3">
               <Button onClick={handleSave} disabled={isPending || isSaving}>
                 {isPending || isSaving ? (
-                  <IconLoader2 className="w-4 h-4 animate-spin" />
+                  <IconLoader2 className="size-4 animate-spin" />
                 ) : (
-                  <IconDeviceFloppy className="w-4 h-4" />
+                  <IconDeviceFloppy className="size-4" />
                 )}
                 {isPending || isSaving
                   ? "Saving..."

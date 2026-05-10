@@ -1,6 +1,7 @@
 Research the following company and provide a comprehensive profile.
 
 ## Company Information
+
 - Company Name: {{company_name}}
 - Website: {{website}}
 - Location: {{city}}, {{state}}, {{country}}

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useSelectionStore, type SelectionEntityType } from "@/lib/store/selection-store";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 
 interface SelectionContextValue {
   entityType: SelectionEntityType;
@@ -12,7 +12,7 @@ interface SelectionContextValue {
 const SelectionContext = React.createContext<SelectionContextValue | null>(null);
 
 export function useSelectionContext() {
-  const context = React.useContext(SelectionContext);
+  const context = use(SelectionContext);
   if (!context) {
     throw new Error("useSelectionContext must be used within SelectionProvider");
   }

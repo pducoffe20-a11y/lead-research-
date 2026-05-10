@@ -102,10 +102,8 @@
   --color-sidebar-ring: #f97316;
 
   /* Typography - Native macOS fonts with fallbacks */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-               "Segoe UI", Roboto, sans-serif;
-  --font-mono: "SF Mono", ui-monospace, "Cascadia Code",
-               "Source Code Pro", Menlo, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
 
   /* Subtle radius for macOS native feel */
   --radius-sm: 4px;
@@ -116,7 +114,8 @@
 }
 
 /* Disable elastic scroll (overscroll bounce) */
-html, body {
+html,
+body {
   overscroll-behavior: none;
 }
 
@@ -162,7 +161,9 @@ html, body {
     -webkit-user-select: none;
   }
   /* Allow text selection in inputs and textareas */
-  input, textarea, [contenteditable="true"] {
+  input,
+  textarea,
+  [contenteditable="true"] {
     user-select: text;
     -webkit-user-select: text;
   }
@@ -578,4 +579,16 @@ body {
 /* Toast error styling */
 [data-sonner-toast][data-type="error"] [data-title] {
   color: var(--destructive) !important;
+}
+
+/* Accessibility: respect reduced motion preference (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -4,11 +4,8 @@ import {
   usePerson,
   useAdjacentPeople,
   useLeadsForSelect as useLeadsForSelectQuery,
-  useInsertPerson,
-  useUpdatePersonStatus,
-  useDeletePeople as useDeletePeopleMutation,
 } from "@/lib/query";
-import type { PersonWithCompany, AdjacentResult, NewPerson } from "@/lib/tauri/types";
+import type { PersonWithCompany, AdjacentResult } from "@/lib/tauri/types";
 
 /**
  * Hook for the people list page.
@@ -69,40 +66,3 @@ export function usePersonDetail(personId: number): {
   };
 }
 
-/**
- * Hook for people mutations.
- * Returns mutation functions for updating and deleting people.
- * Now powered by TanStack Query.
- */
-export function usePeopleMutations() {
-  const insertPersonMutation = useInsertPerson();
-  const updatePersonStatusMutation = useUpdatePersonStatus();
-  const deletePeopleMutation = useDeletePeopleMutation();
-
-  const insertPerson = useCallback(
-    async (data: NewPerson): Promise<number> => {
-      return insertPersonMutation.mutateAsync(data);
-    },
-    [insertPersonMutation]
-  );
-
-  const updatePersonUserStatus = useCallback(
-    async (personId: number, status: string): Promise<void> => {
-      await updatePersonStatusMutation.mutateAsync({ personId, status });
-    },
-    [updatePersonStatusMutation]
-  );
-
-  const deletePeople = useCallback(
-    async (personIds: number[]): Promise<void> => {
-      await deletePeopleMutation.mutateAsync(personIds);
-    },
-    [deletePeopleMutation]
-  );
-
-  return {
-    insertPerson,
-    updatePersonUserStatus,
-    deletePeople,
-  };
-}

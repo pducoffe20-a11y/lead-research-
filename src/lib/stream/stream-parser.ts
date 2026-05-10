@@ -16,13 +16,13 @@ function extractToolResultContent(content: unknown): string {
   }
 
   if (Array.isArray(content)) {
-    return content
-      .filter(
-        (c): c is { type: string; text: string } =>
-          typeof c === "object" && c !== null && c.type === "text" && typeof c.text === "string"
-      )
-      .map((c) => c.text)
-      .join("\n");
+    const texts: string[] = [];
+    for (const c of content) {
+      if (typeof c === "object" && c !== null && c.type === "text" && typeof c.text === "string") {
+        texts.push(c.text);
+      }
+    }
+    return texts.join("\n");
   }
 
   return JSON.stringify(content);
@@ -376,7 +376,8 @@ export function parseStreamJsonEvent(line: string): LogEntry[] {
       case "browser":
         entries.push({
           type: "browser",
-          content: "message" in event && event.message ? String(event.message) : JSON.stringify(event),
+          content:
+            "message" in event && event.message ? String(event.message) : JSON.stringify(event),
           timestamp,
         });
         break;

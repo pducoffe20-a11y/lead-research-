@@ -25,7 +25,7 @@ function AppContent() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background bg-terminal-pattern">
-        <IconLoader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <IconLoader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -36,7 +36,13 @@ function AppContent() {
       <div className="flex h-screen bg-background bg-terminal-pattern font-sans antialiased">
         <Sidebar />
         <StreamPanelWrapper>
-          <Suspense fallback={<div className="flex-1 flex items-center justify-center"><IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>}>
+          <Suspense
+            fallback={
+              <div className="flex-1 flex items-center justify-center">
+                <IconLoader2 className="size-6 animate-spin text-muted-foreground" />
+              </div>
+            }
+          >
             <Routes>
               <Route path="/" element={<Navigate to="/lead" replace />} />
               <Route path="/lead" element={<LeadListPage />} />

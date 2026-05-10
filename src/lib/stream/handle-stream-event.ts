@@ -20,18 +20,21 @@ export function handleStreamEvent(event: StreamEvent): void {
   const parsed = parseStreamJsonEvent(content);
   const seq = eventCounter++;
 
-  const entries: ClientLogEntry[] = parsed.length > 0
-    ? parsed.map((entry, idx) => ({
-        ...entry,
-        id: `${jobId}-${seq}-${idx}`,
-        timestamp: new Date(entry.timestamp ?? timestamp),
-      }))
-    : [{
-        id: `${jobId}-${seq}-raw`,
-        type: "info" as const,
-        content: content,
-        timestamp: new Date(timestamp),
-      }];
+  const entries: ClientLogEntry[] =
+    parsed.length > 0
+      ? parsed.map((entry, idx) => ({
+          ...entry,
+          id: `${jobId}-${seq}-${idx}`,
+          timestamp: new Date(entry.timestamp ?? timestamp),
+        }))
+      : [
+          {
+            id: `${jobId}-${seq}-raw`,
+            type: "info" as const,
+            content: content,
+            timestamp: new Date(timestamp),
+          },
+        ];
 
   useStreamPanelStore.getState().appendLogs(jobId, entries);
 }

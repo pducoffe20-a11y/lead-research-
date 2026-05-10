@@ -59,28 +59,6 @@ export const RESEARCH_STATUS_CONFIG: Record<ResearchStatusType, StatusConfigItem
   },
 };
 
-export const RESEARCH_STATUS_ORDER: ResearchStatusType[] = [
-  "completed",
-  "in_progress",
-  "pending",
-  "failed",
-];
-
-export function isValidResearchStatus(status: string | null): status is ResearchStatusType {
-  return status !== null && RESEARCH_STATUS_ORDER.includes(status as ResearchStatusType);
-}
-
-export function validateResearchStatus(status: string | null): ResearchStatusType {
-  if (isValidResearchStatus(status)) {
-    return status;
-  }
-  return "pending";
-}
-
-export function getResearchStatusConfig(status: string | null): StatusConfigItem {
-  return RESEARCH_STATUS_CONFIG[validateResearchStatus(status)];
-}
-
 // ============================================
 // Lead User Status (sales pipeline stage)
 // ============================================
@@ -165,7 +143,7 @@ export const LEAD_USER_STATUS_ORDER: LeadUserStatusType[] = [
   "on_hold",
 ];
 
-export function isValidLeadUserStatus(status: string | null): status is LeadUserStatusType {
+function isValidLeadUserStatus(status: string | null): status is LeadUserStatusType {
   return status !== null && LEAD_USER_STATUS_ORDER.includes(status as LeadUserStatusType);
 }
 
@@ -174,10 +152,6 @@ export function validateLeadUserStatus(status: string | null): LeadUserStatusTyp
     return status;
   }
   return "new";
-}
-
-export function getLeadUserStatusConfig(status: string | null): StatusConfigItem {
-  return LEAD_USER_STATUS_CONFIG[validateLeadUserStatus(status)];
 }
 
 // ============================================
@@ -248,7 +222,7 @@ export const PERSON_USER_STATUS_ORDER: PersonUserStatusType[] = [
   "not_interested",
 ];
 
-export function isValidPersonUserStatus(status: string | null): status is PersonUserStatusType {
+function isValidPersonUserStatus(status: string | null): status is PersonUserStatusType {
   return status !== null && PERSON_USER_STATUS_ORDER.includes(status as PersonUserStatusType);
 }
 
@@ -258,17 +232,3 @@ export function validatePersonUserStatus(status: string | null): PersonUserStatu
   }
   return "new";
 }
-
-export function getPersonUserStatusConfig(status: string | null): StatusConfigItem {
-  return PERSON_USER_STATUS_CONFIG[validatePersonUserStatus(status)];
-}
-
-// ============================================
-// Legacy exports for backwards compatibility
-// ============================================
-
-// Keep StatusType as an alias for ResearchStatusType for backwards compat
-export type StatusType = ResearchStatusType;
-export const STATUS_CONFIG = RESEARCH_STATUS_CONFIG;
-export const STATUS_ORDER = RESEARCH_STATUS_ORDER;
-export const getStatusConfig = getResearchStatusConfig;

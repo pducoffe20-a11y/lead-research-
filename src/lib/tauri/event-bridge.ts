@@ -102,11 +102,14 @@ export async function initializeEventBridge(): Promise<void> {
   unlisteners.push(leadScoredUnlisten);
 
   // People bulk created → invalidate lead's people + people list
-  const peopleBulkCreatedUnlisten = await listen<PeopleBulkCreatedPayload>("people-bulk-created", (event) => {
-    const leadId = event.payload.lead_id;
-    queryClient.invalidateQueries({ queryKey: queryKeys.leadPeople(leadId) });
-    queryClient.invalidateQueries({ queryKey: queryKeys.peopleList() });
-  });
+  const peopleBulkCreatedUnlisten = await listen<PeopleBulkCreatedPayload>(
+    "people-bulk-created",
+    (event) => {
+      const leadId = event.payload.lead_id;
+      queryClient.invalidateQueries({ queryKey: queryKeys.leadPeople(leadId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.peopleList() });
+    }
+  );
   unlisteners.push(peopleBulkCreatedUnlisten);
 
   // Leads deleted → remove from cache + invalidate lists + onboarding
@@ -149,16 +152,19 @@ export async function initializeEventBridge(): Promise<void> {
   unlisteners.push(jobCreatedUnlisten);
 
   // Job status changed → invalidate jobs queries
-  const jobStatusChangedUnlisten = await listen<JobStatusChangedPayload>("job-status-changed", (event) => {
-    const { jobId } = event.payload;
+  const jobStatusChangedUnlisten = await listen<JobStatusChangedPayload>(
+    "job-status-changed",
+    (event) => {
+      const { jobId } = event.payload;
 
-    // Invalidate jobs queries for status updates
-    queryClient.invalidateQueries({ queryKey: queryKeys.jobsRecent(50) });
-    queryClient.invalidateQueries({ queryKey: queryKeys.jobsActive() });
+      // Invalidate jobs queries for status updates
+      queryClient.invalidateQueries({ queryKey: queryKeys.jobsRecent(50) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.jobsActive() });
 
-    // Also invalidate the specific job query so useJob() updates
-    queryClient.invalidateQueries({ queryKey: [...queryKeys.jobs, jobId] });
-  });
+      // Also invalidate the specific job query so useJob() updates
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.jobs, jobId] });
+    }
+  );
   unlisteners.push(jobStatusChangedUnlisten);
 
   isInitialized = true;

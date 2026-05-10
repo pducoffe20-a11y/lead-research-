@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { IconCircleCheck, IconCircle, IconCircleDot } from "@tabler/icons-react";
 
 export type OnboardingStepData = {
@@ -24,18 +24,18 @@ export function OnboardingStep({ step, isActive, onClick }: OnboardingStepProps)
         className="flex items-center gap-2 w-full px-2 py-1 text-left rounded hover:bg-white/5 transition-colors"
       >
         {step.isCompleted ? (
-          <motion.div
+          <m.div
             key="completed"
             initial={{ scale: 1 }}
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ duration: 0.25 }}
           >
-            <IconCircleCheck className="w-4 h-4 text-primary" />
-          </motion.div>
+            <IconCircleCheck className="size-4 text-primary" />
+          </m.div>
         ) : isActive ? (
-          <IconCircleDot className="w-4 h-4 text-primary" />
+          <IconCircleDot className="size-4 text-primary" />
         ) : (
-          <IconCircle className="w-4 h-4 text-muted-foreground/50" />
+          <IconCircle className="size-4 text-muted-foreground/50" />
         )}
         <span
           className={`text-[13px] ${
@@ -52,7 +52,7 @@ export function OnboardingStep({ step, isActive, onClick }: OnboardingStepProps)
 
       <AnimatePresence>
         {isActive && !step.isCompleted && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -67,7 +67,7 @@ export function OnboardingStep({ step, isActive, onClick }: OnboardingStepProps)
                 {step.description}
               </p>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

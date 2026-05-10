@@ -1,6 +1,7 @@
 Research the following person and provide a detailed professional profile.
 
 ## Person Information
+
 - Name: {{first_name}} {{last_name}}
 - Title: {{title}}
 - Company: {{company_name}}

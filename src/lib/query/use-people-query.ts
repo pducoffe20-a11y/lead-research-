@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  getAllPeople,
-  getPerson,
-  getAdjacentPeople,
-} from "@/lib/tauri/commands";
+import { getAllPeople, getPerson, getAdjacentPeople } from "@/lib/tauri/commands";
 import { queryKeys } from "./keys";
 
 /**

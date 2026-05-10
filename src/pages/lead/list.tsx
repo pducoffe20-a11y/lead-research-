@@ -59,16 +59,19 @@ export default function LeadListPage() {
   if (isLoading && leads.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-muted-foreground">Loading leads...</p>
+        <p className="text-muted-foreground">Loading leads…</p>
       </div>
     );
   }
 
   return (
     <>
-      <header data-tauri-drag-region className="h-10 border-b border-white/5 flex items-center px-3 gap-1">
+      <header
+        data-tauri-drag-region
+        className="h-10 border-b border-white/5 flex items-center px-3 gap-1"
+      >
         <div className="flex items-center rounded gap-1 px-2 py-1 bg-white/10 text-sm">
-          <IconBuilding className="w-3.5 h-3.5" />
+          <IconBuilding className="size-3.5" />
           <span>All Companies</span>
         </div>
         <div className="flex-1" data-tauri-drag-region />
@@ -78,7 +81,7 @@ export default function LeadListPage() {
 
       <div className="h-9 border-b border-white/5 flex items-center px-3 gap-2">
         <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground px-2">
-          <IconSearch className="w-3.5 h-3.5 mr-1" />
+          <IconSearch className="size-3.5 mr-1" />
           Filter
         </Button>
         <div className="flex-1" />

@@ -59,7 +59,7 @@ export function AddLeadModal({ onSuccess }: AddLeadModalProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <IconPlus className="w-3.5 h-3.5" />
+          <IconPlus className="size-3.5" />
           Add Lead
         </Button>
       </DialogTrigger>
@@ -118,7 +118,7 @@ export function AddLeadModal({ onSuccess }: AddLeadModalProps) {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading || !formData.companyName.trim()}>
-              {loading && <IconLoader2 className="w-3.5 h-3.5 animate-spin" />}
+              {loading && <IconLoader2 className="size-3.5 animate-spin" />}
               {loading ? "Adding..." : "Add Lead"}
             </Button>
           </DialogFooter>

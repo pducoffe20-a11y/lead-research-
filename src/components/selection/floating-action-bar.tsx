@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { IconX, IconCommand } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useSelectionStore } from "@/lib/store/selection-store";
@@ -35,7 +35,7 @@ export function FloatingActionBar({ actions }: FloatingActionBarProps) {
     <>
       <AnimatePresence>
         {isVisible && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -67,7 +67,7 @@ export function FloatingActionBar({ actions }: FloatingActionBarProps) {
                 <IconCommand className="size-3" /> K
               </kbd>
             </Button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 

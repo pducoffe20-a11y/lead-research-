@@ -54,10 +54,6 @@ export async function getPerson(id: number): Promise<PersonWithCompany | null> {
   return invoke("get_person", { id });
 }
 
-export async function getPersonRaw(id: number): Promise<Person | null> {
-  return invoke("get_person_raw", { id });
-}
-
 export async function getPeopleForLead(leadId: number): Promise<Person[]> {
   return invoke("get_people_for_lead", { leadId });
 }
@@ -97,11 +93,6 @@ export async function savePromptByType(promptType: PromptType, content: string):
 // ============================================================================
 // Company Overview Commands
 // ============================================================================
-
-export async function getCompanyOverview(): Promise<string | null> {
-  const prompt = await getPromptByType("company_overview");
-  return prompt?.content ?? null;
-}
 
 export async function saveCompanyOverview(content: string): Promise<number> {
   return savePromptByType("company_overview", content);
@@ -155,36 +146,6 @@ export async function getLeadsWithScores(): Promise<LeadWithScore[]> {
   return invoke("get_leads_with_scores");
 }
 
-export async function getUnscoredLeads(): Promise<Lead[]> {
-  return invoke("get_unscored_leads");
-}
-
-export async function saveLeadScore(
-  leadId: number,
-  configId: number,
-  passesRequirements: boolean,
-  requirementResults: string,
-  totalScore: number,
-  scoreBreakdown: string,
-  tier: string,
-  scoringNotes?: string
-): Promise<number> {
-  return invoke("save_lead_score", {
-    leadId,
-    configId,
-    passesRequirements,
-    requirementResults,
-    totalScore,
-    scoreBreakdown,
-    tier,
-    scoringNotes,
-  });
-}
-
-export async function deleteLeadScore(leadId: number): Promise<void> {
-  return invoke("delete_lead_score", { leadId });
-}
-
 // ============================================================================
 // Research Commands
 // ============================================================================
@@ -234,10 +195,6 @@ export async function startFindLeads(
 
 export async function killJob(jobId: string): Promise<void> {
   return invoke("kill_job", { jobId });
-}
-
-export async function getActiveJobs(): Promise<string[]> {
-  return invoke("get_active_jobs");
 }
 
 // ============================================================================
@@ -298,34 +255,8 @@ export async function getJobLogs(
   return invoke("get_job_logs_cmd", { jobId, afterSequence, limit });
 }
 
-export async function cleanupOldJobs(days?: number): Promise<number> {
-  return invoke("cleanup_old_jobs_cmd", { days });
-}
-
 export async function deleteJob(jobId: string): Promise<void> {
   return invoke("delete_job_cmd", { jobId });
-}
-
-// ============================================================================
-// Recovery Commands
-// ============================================================================
-
-import type { StaleJobsResult } from "./types";
-
-export async function getStuckEntities(): Promise<StaleJobsResult> {
-  return invoke("get_stuck_entities");
-}
-
-export async function resetEntityStatus(
-  entityType: "lead" | "person",
-  entityId: number,
-  newStatus: string
-): Promise<void> {
-  return invoke("reset_entity_status", { entityType, entityId, newStatus });
-}
-
-export async function recoverAllStuck(): Promise<number> {
-  return invoke("recover_all_stuck");
 }
 
 // ============================================================================

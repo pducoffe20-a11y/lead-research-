@@ -62,7 +62,7 @@ export function SelectableEntityList<T, S extends string>({
               configType={configType}
             >
               {items.map((item) => (
-                <React.Fragment key={getItemId(item)}>{renderRow(item)}</React.Fragment>
+                <Row key={getItemId(item)} item={item} render={renderRow} />
               ))}
             </CollapsibleStatusGroup>
           );
@@ -71,4 +71,8 @@ export function SelectableEntityList<T, S extends string>({
       <FloatingActionBar actions={actions} />
     </SelectionProvider>
   );
+}
+
+function Row<T>({ item, render }: { item: T; render: (item: T) => React.ReactNode }) {
+  return <>{render(item)}</>;
 }

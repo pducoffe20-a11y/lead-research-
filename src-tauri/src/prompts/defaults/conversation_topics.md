@@ -1,14 +1,17 @@
 Generate personalized conversation topics and talking points for outreach.
 
 ## Context
+
 - Person: {{first_name}} {{last_name}}
 - Title: {{title}}
 - Company: {{company_name}}
 
 ## Person Profile
+
 {{person_profile}}
 
 ## Company Profile
+
 {{company_profile}}
 
 ## Instructions

@@ -21,6 +21,7 @@ import {
   SidebarProperty,
 } from "@/components/layout/entity-detail-layout";
 import { useLeadDetail } from "@/lib/hooks/use-leads";
+import { formatShortDate } from "@/lib/utils";
 
 export default function LeadDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,7 @@ export default function LeadDetailPage() {
   if (isLoading && !lead) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <IconLoader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        <IconLoader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -58,17 +59,17 @@ export default function LeadDetailPage() {
     <>
       {lead.researchedAt && (
         <ActivityItem
-          icon={<IconCircleCheck className="w-3.5 h-3.5 text-green-500" />}
+          icon={<IconCircleCheck className="size-3.5 text-green-500" />}
           iconBgColor="bg-green-500/20"
           label="Research completed"
-          date={new Date(lead.researchedAt)}
+          timestamp={lead.researchedAt}
         />
       )}
       <ActivityItem
-        icon={<IconBuilding className="w-3.5 h-3.5 text-primary" />}
+        icon={<IconBuilding className="size-3.5 text-primary" />}
         iconBgColor="bg-primary/20"
         label="Lead created"
-        date={new Date(lead.createdAt)}
+        timestamp={lead.createdAt}
       />
     </>
   );
@@ -103,7 +104,7 @@ export default function LeadDetailPage() {
         {(lead.city || lead.state || lead.country) && (
           <SidebarProperty label="Location">
             <div className="flex items-center gap-1.5 text-sm">
-              <IconMapPin className="w-4 h-4 text-muted-foreground" />
+              <IconMapPin className="size-4 text-muted-foreground" />
               <span>{[lead.city, lead.state, lead.country].filter(Boolean).join(", ")}</span>
             </div>
           </SidebarProperty>
@@ -112,7 +113,7 @@ export default function LeadDetailPage() {
         {lead.employeeRange && (
           <SidebarProperty label="Size">
             <div className="flex items-center gap-1.5 text-sm">
-              <IconUsers className="w-4 h-4 text-muted-foreground" />
+              <IconUsers className="size-4 text-muted-foreground" />
               <span>{lead.employeeRange}</span>
             </div>
           </SidebarProperty>
@@ -137,7 +138,7 @@ export default function LeadDetailPage() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <IconWorld className="w-4 h-4" />
+                  <IconWorld className="size-4" />
                   <span className="truncate">{domain}</span>
                 </a>
               )}
@@ -148,7 +149,7 @@ export default function LeadDetailPage() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <IconBrandLinkedin className="w-4 h-4" />
+                  <IconBrandLinkedin className="size-4" />
                   <span>LinkedIn</span>
                 </a>
               )}
@@ -159,14 +160,8 @@ export default function LeadDetailPage() {
         {lead.researchedAt && (
           <div className="border-t border-white/5 pt-4 mt-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <IconCalendar className="w-3.5 h-3.5" />
-              <span>
-                Researched{" "}
-                {new Date(lead.researchedAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
+              <IconCalendar className="size-3.5" />
+              <span>Researched {formatShortDate(lead.researchedAt)}</span>
             </div>
           </div>
         )}

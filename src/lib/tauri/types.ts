@@ -104,14 +104,14 @@ export interface DemandSignifier {
   enabled: boolean;
 }
 
-export interface RequirementResult {
+interface RequirementResult {
   id: string;
   name: string;
   passed: boolean;
   reason: string;
 }
 
-export interface SignifierScore {
+interface SignifierScore {
   id: string;
   name: string;
   weight: number;
@@ -213,7 +213,12 @@ export interface OnboardingStatus {
 // Job Types
 // ============================================================================
 
-export type JobType = "company_research" | "person_research" | "scoring" | "conversation" | "lead_finder";
+export type JobType =
+  | "company_research"
+  | "person_research"
+  | "scoring"
+  | "conversation"
+  | "lead_finder";
 export type JobStatus = "queued" | "running" | "completed" | "error" | "timeout" | "cancelled";
 
 export interface Job {
@@ -254,29 +259,3 @@ export interface JobLog {
   source: "stdout" | "stderr" | "internal";
 }
 
-// ============================================================================
-// Recovery Types
-// ============================================================================
-
-export interface StaleJob {
-  id: string;
-  jobType: JobType;
-  entityId: number;
-  entityLabel: string;
-  status: JobStatus;
-  startedAt: number | null;
-  createdAt: number;
-}
-
-export interface StuckEntity {
-  id: number;
-  name: string;
-  entityType: "lead" | "person";
-  status: string;
-}
-
-export interface StaleJobsResult {
-  staleJobs: StaleJob[];
-  stuckLeads: StuckEntity[];
-  stuckPeople: StuckEntity[];
-}

@@ -5,11 +5,8 @@ import {
   useLeadScore,
   useLeadPeople,
   useAdjacentLeads,
-  useInsertLead,
-  useUpdateLeadStatus,
-  useDeleteLeads as useDeleteLeadsMutation,
 } from "@/lib/query";
-import type { Lead, LeadScore, Person, AdjacentResult, NewLead } from "@/lib/tauri/types";
+import type { Lead, LeadScore, Person, AdjacentResult } from "@/lib/tauri/types";
 
 /**
  * Hook for the leads list page.
@@ -70,40 +67,3 @@ export function useLeadDetail(leadId: number): {
   };
 }
 
-/**
- * Hook for lead mutations.
- * Returns mutation functions for updating and deleting leads.
- * Now powered by TanStack Query.
- */
-export function useLeadMutations() {
-  const insertLeadMutation = useInsertLead();
-  const updateLeadStatusMutation = useUpdateLeadStatus();
-  const deleteLeadsMutation = useDeleteLeadsMutation();
-
-  const insertLead = useCallback(
-    async (data: NewLead): Promise<number> => {
-      return insertLeadMutation.mutateAsync(data);
-    },
-    [insertLeadMutation]
-  );
-
-  const updateLeadUserStatus = useCallback(
-    async (leadId: number, status: string): Promise<void> => {
-      await updateLeadStatusMutation.mutateAsync({ leadId, status });
-    },
-    [updateLeadStatusMutation]
-  );
-
-  const deleteLeads = useCallback(
-    async (leadIds: number[]): Promise<void> => {
-      await deleteLeadsMutation.mutateAsync(leadIds);
-    },
-    [deleteLeadsMutation]
-  );
-
-  return {
-    insertLead,
-    updateLeadUserStatus,
-    deleteLeads,
-  };
-}

@@ -29,34 +29,7 @@ export interface ClientLogEntry extends Omit<LogEntry, "timestamp"> {
   timestamp: Date;
 }
 
-// Job status
-export type JobStatus = "running" | "completed" | "error" | "timeout";
-
-// SSE event types
-export interface SSELogEvent {
-  type: "log";
-  logType: LogEntryType;
-  content: string;
-  toolName?: string;
-  timestamp: number;
-}
-
-export interface SSECompleteEvent {
-  type: "complete";
-  message: string;
-}
-
-export interface SSEErrorEvent {
-  type: "error";
-  message: string;
-}
-
-export type SSEEvent = SSELogEvent | SSECompleteEvent | SSEErrorEvent;
-
-// Claude CLI stream-json events (raw from CLI)
-
-// Usage info from Claude API
-export interface ClaudeUsage {
+interface ClaudeUsage {
   input_tokens: number;
   output_tokens: number;
   cache_creation_input_tokens?: number;
@@ -67,7 +40,7 @@ export interface ClaudeUsage {
 }
 
 // Aggregated usage stats for display
-export interface UsageStats {
+interface UsageStats {
   inputTokens: number;
   outputTokens: number;
   cacheReadTokens?: number;
@@ -77,7 +50,7 @@ export interface UsageStats {
 }
 
 // Metadata for tool results
-export interface ToolResultMetadata {
+interface ToolResultMetadata {
   durationMs?: number;
   durationSeconds?: number; // WebSearch uses seconds
   numFiles?: number;
@@ -88,19 +61,19 @@ export interface ToolResultMetadata {
 }
 
 // Content block types
-export interface ClaudeTextBlock {
+interface ClaudeTextBlock {
   type: "text";
   text: string;
 }
 
-export interface ClaudeToolUseBlock {
+interface ClaudeToolUseBlock {
   type: "tool_use";
   id: string;
   name: string;
   input: Record<string, unknown>;
 }
 
-export interface ClaudeThinkingBlock {
+interface ClaudeThinkingBlock {
   type: "thinking";
   thinking: string;
 }
@@ -112,10 +85,14 @@ export interface ClaudeToolResultBlock {
   is_error?: boolean;
 }
 
-export type ClaudeContentBlock = ClaudeTextBlock | ClaudeToolUseBlock | ClaudeThinkingBlock | ClaudeToolResultBlock;
+export type ClaudeContentBlock =
+  | ClaudeTextBlock
+  | ClaudeToolUseBlock
+  | ClaudeThinkingBlock
+  | ClaudeToolResultBlock;
 
 // System init event
-export interface ClaudeSystemInitEvent {
+interface ClaudeSystemInitEvent {
   type: "system";
   subtype: "init";
   cwd: string;
@@ -129,7 +106,7 @@ export interface ClaudeSystemInitEvent {
 }
 
 // Assistant message event
-export interface ClaudeAssistantEvent {
+interface ClaudeAssistantEvent {
   type: "assistant";
   message: {
     model: string;
@@ -143,7 +120,7 @@ export interface ClaudeAssistantEvent {
 }
 
 // User event (tool results)
-export interface ClaudeUserEvent {
+interface ClaudeUserEvent {
   type: "user";
   message: {
     role: "user";
@@ -159,7 +136,7 @@ export interface ClaudeUserEvent {
 }
 
 // Result event
-export interface ClaudeResultEvent {
+interface ClaudeResultEvent {
   type: "result";
   subtype: "success" | "error";
   is_error: boolean;
@@ -174,24 +151,24 @@ export interface ClaudeResultEvent {
 }
 
 // Content block streaming events
-export interface ClaudeContentBlockStartEvent {
+interface ClaudeContentBlockStartEvent {
   type: "content_block_start";
   content_block: ClaudeContentBlock;
 }
 
-export interface ClaudeContentBlockDeltaEvent {
+interface ClaudeContentBlockDeltaEvent {
   type: "content_block_delta";
   delta: { text?: string };
 }
 
 // Error event
-export interface ClaudeErrorEvent {
+interface ClaudeErrorEvent {
   type: "error";
   error: string;
 }
 
 // Tool result event (legacy format)
-export interface ClaudeToolResultEvent {
+interface ClaudeToolResultEvent {
   type: "tool_result";
   tool_use_id: string;
   output?: string;
@@ -199,7 +176,7 @@ export interface ClaudeToolResultEvent {
 }
 
 // Browser/MCP events
-export interface ClaudeBrowserEvent {
+interface ClaudeBrowserEvent {
   type: "browser" | "mcp";
   message?: unknown;
 }

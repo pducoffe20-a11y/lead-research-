@@ -1,15 +1,9 @@
-// Re-export scoring types from tauri types
 export type {
   ScoringTier,
   RequiredCharacteristic,
   DemandSignifier,
-  RequirementResult,
-  SignifierScore,
-  ScoringConfig,
-  LeadScore,
 } from "@/lib/tauri/types";
 
-// Alias for backward compatibility
 export type { LeadScore as ParsedLeadScore } from "@/lib/tauri/types";
 export type { ScoringConfig as ParsedScoringConfig } from "@/lib/tauri/types";
 
@@ -117,15 +111,3 @@ export const defaultScoringConfig = {
   tierNurtureMin: 30,
 };
 
-// Lead with score for list display
-export interface LeadWithScore {
-  id: number;
-  companyName: string;
-  website: string | null;
-  industry: string | null;
-  city: string | null;
-  state: string | null;
-  country: string | null;
-  researchStatus: "pending" | "in_progress" | "completed" | "failed" | null;
-  score: import("@/lib/tauri/types").LeadScore | null;
-}

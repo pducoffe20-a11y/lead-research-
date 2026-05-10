@@ -4,7 +4,11 @@ import { SelectableEntityList, SelectableRow } from "@/components/selection";
 import type { ActionConfig } from "@/components/selection";
 import { toast } from "sonner";
 import { useSelectionStore } from "@/lib/store/selection-store";
-import { deletePeople, startPersonResearch, startConversationGeneration } from "@/lib/tauri/commands";
+import {
+  deletePeople,
+  startPersonResearch,
+  startConversationGeneration,
+} from "@/lib/tauri/commands";
 import { handleStreamEvent } from "@/lib/stream/handle-stream-event";
 import {
   PERSON_USER_STATUS_CONFIG,
@@ -33,7 +37,10 @@ interface PeopleListWithSelectionProps {
   onRefresh?: () => void;
 }
 
-export function PeopleListWithSelection({ groupedPeople, onRefresh }: PeopleListWithSelectionProps) {
+export function PeopleListWithSelection({
+  groupedPeople,
+  onRefresh,
+}: PeopleListWithSelectionProps) {
   const clearSelection = useSelectionStore((state) => state.clearAll);
 
   // Create a map for quick person name lookups
@@ -47,24 +54,28 @@ export function PeopleListWithSelection({ groupedPeople, onRefresh }: PeopleList
 
   const handleResearch = useCallback(
     async (selectedIds: number[]) => {
+      const promises: Promise<boolean>[] = [];
+      for (const personId of selectedIds) {
+        if (!personMap.has(personId)) continue;
+        promises.push(
+          (async () => {
+            try {
+              await startPersonResearch(personId, handleStreamEvent);
+              return true;
+            } catch (error) {
+              console.error(`Failed to start research for person ${personId}:`, error);
+              return false;
+            }
+          })()
+        );
+      }
+      const results = await Promise.all(promises);
+
       let started = 0;
       let failed = 0;
-
-      // Start research for each selected person
-      for (const personId of selectedIds) {
-        const person = personMap.get(personId);
-        if (!person) continue;
-
-        try {
-          // Start research - backend will emit events
-          // Stream logs to Zustand via handleStreamEvent
-          await startPersonResearch(personId, handleStreamEvent);
-
-          started++;
-        } catch (error) {
-          console.error(`Failed to start research for person ${personId}:`, error);
-          failed++;
-        }
+      for (const ok of results) {
+        if (ok) started++;
+        else failed++;
       }
 
       if (started > 0) {
@@ -79,31 +90,42 @@ export function PeopleListWithSelection({ groupedPeople, onRefresh }: PeopleList
 
   const handleConversation = useCallback(
     async (selectedIds: number[]) => {
+      const promises: Promise<boolean>[] = [];
+      for (const personId of selectedIds) {
+        if (!personMap.has(personId)) continue;
+        promises.push(
+          (async () => {
+            try {
+              await startConversationGeneration(personId, handleStreamEvent);
+              return true;
+            } catch (error) {
+              console.error(
+                `Failed to start conversation generation for person ${personId}:`,
+                error
+              );
+              return false;
+            }
+          })()
+        );
+      }
+      const results = await Promise.all(promises);
+
       let started = 0;
       let failed = 0;
-
-      // Start conversation generation for each selected person
-      for (const personId of selectedIds) {
-        const person = personMap.get(personId);
-        if (!person) continue;
-
-        try {
-          // Start conversation - backend will emit events
-          // Stream logs to Zustand via handleStreamEvent
-          await startConversationGeneration(personId, handleStreamEvent);
-
-          started++;
-        } catch (error) {
-          console.error(`Failed to start conversation generation for person ${personId}:`, error);
-          failed++;
-        }
+      for (const ok of results) {
+        if (ok) started++;
+        else failed++;
       }
 
       if (started > 0) {
-        toast.success(`Started conversation generation for ${started} ${started > 1 ? "people" : "person"}`);
+        toast.success(
+          `Started conversation generation for ${started} ${started > 1 ? "people" : "person"}`
+        );
       }
       if (failed > 0) {
-        toast.error(`Failed to start conversation generation for ${failed} ${failed > 1 ? "people" : "person"}`);
+        toast.error(
+          `Failed to start conversation generation for ${failed} ${failed > 1 ? "people" : "person"}`
+        );
       }
     },
     [personMap]
@@ -174,7 +196,7 @@ function PersonRow({ person }: { person: PersonWithCompany }) {
 
   return (
     <SelectableRow id={person.id}>
-      <StatusIcon className={`w-4 h-4 ${userConfig.color} shrink-0`} />
+      <StatusIcon className={`size-4 ${userConfig.color} shrink-0`} />
 
       <Link to={`/people/${person.id}`} className="flex-1 min-w-0 truncate">
         <span className="font-medium">{fullName}</span>
@@ -186,12 +208,12 @@ function PersonRow({ person }: { person: PersonWithCompany }) {
           to={`/lead/${person.leadId}`}
           className="w-48 shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
-          <IconBuilding className="w-3.5 h-3.5 shrink-0" />
+          <IconBuilding className="size-3.5 shrink-0" />
           <span className="truncate">{person.companyName}</span>
         </Link>
       ) : (
         <div className="w-48 shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground/50">
-          <IconBuilding className="w-3.5 h-3.5 shrink-0" />
+          <IconBuilding className="size-3.5 shrink-0" />
           <span className="truncate italic">No company</span>
         </div>
       )}

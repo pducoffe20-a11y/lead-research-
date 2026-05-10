@@ -111,7 +111,7 @@ export function LeadResearchPanel({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <IconBuilding className="w-4 h-4" />
+            <IconBuilding className="size-4" />
             Company
           </button>
           <button
@@ -122,7 +122,7 @@ export function LeadResearchPanel({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <IconUsers className="w-4 h-4" />
+            <IconUsers className="size-4" />
             People ({people.length})
           </button>
           <button
@@ -133,16 +133,21 @@ export function LeadResearchPanel({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <IconTargetArrow className="w-4 h-4" />
+            <IconTargetArrow className="size-4" />
             Score {score && <span className="text-xs opacity-60">({score.totalScore})</span>}
           </button>
         </div>
         {showResearchButton && (
-          <Button variant="outline" size="sm" onClick={handleStartResearch} disabled={isResearchJobActive}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleStartResearch}
+            disabled={isResearchJobActive}
+          >
             {isResearchJobActive ? (
-              <IconLoader2 className="h-4 w-4 animate-spin" />
+              <IconLoader2 className="size-4 animate-spin" />
             ) : (
-              <IconRefresh className="h-4 w-4" />
+              <IconRefresh className="size-4" />
             )}
             {isResearchJobActive ? "Researching..." : "Re-run Research"}
           </Button>
@@ -150,9 +155,9 @@ export function LeadResearchPanel({
         {showScoreButton && (
           <Button variant="outline" size="sm" onClick={handleScore} disabled={isScoringJobActive}>
             {isScoringJobActive ? (
-              <IconLoader2 className="h-4 w-4 animate-spin" />
+              <IconLoader2 className="size-4 animate-spin" />
             ) : (
-              <IconTargetArrow className="h-4 w-4" />
+              <IconTargetArrow className="size-4" />
             )}
             {isScoringJobActive ? "Scoring..." : "Score"}
           </Button>
@@ -202,9 +207,9 @@ function PeopleList({ people }: { people: Person[] }) {
             className="flex items-center gap-4 p-3 rounded-lg border border-white/5 hover:bg-white/[0.02] hover:border-white/10 transition-colors cursor-pointer"
           >
             <div
-              className={`w-10 h-10 rounded-full ${statusColors[status]} flex items-center justify-center shrink-0`}
+              className={`size-10 rounded-full ${statusColors[status]} flex items-center justify-center shrink-0`}
             >
-              <IconUser className="w-5 h-5 text-muted-foreground" />
+              <IconUser className="size-5 text-muted-foreground" />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -219,12 +224,13 @@ function PeopleList({ people }: { people: Person[] }) {
             <div className="flex items-center gap-3 shrink-0">
               {person.yearJoined && (
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <IconCalendar className="w-3.5 h-3.5" />
+                  <IconCalendar className="size-3.5" />
                   <span>{person.yearJoined}</span>
                 </div>
               )}
               {person.email && (
-                <span
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -233,11 +239,12 @@ function PeopleList({ people }: { people: Person[] }) {
                   className="p-1.5 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors"
                   title={person.email}
                 >
-                  <IconMail className="w-4 h-4" />
-                </span>
+                  <IconMail className="size-4" />
+                </button>
               )}
               {person.linkedinUrl && (
-                <span
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -246,10 +253,10 @@ function PeopleList({ people }: { people: Person[] }) {
                   className="p-1.5 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors"
                   title="LinkedIn Profile"
                 >
-                  <IconBrandLinkedin className="w-4 h-4" />
-                </span>
+                  <IconBrandLinkedin className="size-4" />
+                </button>
               )}
-              <IconChevronRight className="w-4 h-4 text-muted-foreground/50" />
+              <IconChevronRight className="size-4 text-muted-foreground/50" />
             </div>
           </Link>
         );

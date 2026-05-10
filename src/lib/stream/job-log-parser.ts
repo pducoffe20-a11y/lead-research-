@@ -6,7 +6,7 @@ import { parseStreamJsonEvent, parseRawOutput } from "./stream-parser";
  * Parse a JobLog (from database) into ClientLogEntry array (for UI).
  * Handles both JSON and raw text formats.
  */
-export function parseJobLog(log: JobLog): ClientLogEntry[] {
+function parseJobLog(log: JobLog): ClientLogEntry[] {
   const content = log.content;
 
   // Try parsing as JSON first (Claude stream-json format)

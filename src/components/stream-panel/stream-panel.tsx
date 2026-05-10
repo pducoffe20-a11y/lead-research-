@@ -9,7 +9,7 @@ export function StreamPanel() {
   const isOpen = useStreamPanelStore((s) => s.isOpen);
 
   return (
-    <div className="bg-black flex flex-col h-full">
+    <div className="bg-zinc-950 flex flex-col h-full">
       <StreamPanelHeader />
 
       {isOpen && (

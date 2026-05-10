@@ -19,8 +19,8 @@ export function Sidebar() {
       {/* Draggable region for traffic lights area */}
       <div className="p-2">
         <div className="flex items-center gap-2 w-full px-2 py-1 font-medium">
-          <div className="w-6 h-6 flex rounded-md items-center font-sans justify-center text-[12px] font-semibold text-primary-foreground bg-white/10 backdrop-blur">
-            <img className="w-4 h-4" src="./menubar.png" alt="" />
+          <div className="size-6 flex rounded-md items-center font-sans justify-center text-[12px] font-semibold text-primary-foreground bg-white/10 backdrop-blur">
+            <img className="size-4" src="./menubar.png" alt="" />
           </div>
           <span className="flex-1 text-left truncate">Qualify</span>
         </div>
@@ -29,7 +29,7 @@ export function Sidebar() {
       <nav className="flex-1 px-2 py-1 space-y-px overflow-y-auto">
         <div className="py-1">
           <div className="flex items-center gap-1.5 w-full px-2 py-1 text-muted-foreground text-[11px] uppercase tracking-wider font-medium">
-            <IconChevronDown className="w-3 h-3" />
+            <IconChevronDown className="size-3" />
             Views
           </div>
           <div className="mt-0.5 space-y-px">
@@ -37,14 +37,14 @@ export function Sidebar() {
               to="/people"
               className="flex items-center rounded gap-2 px-2 py-1 text-muted-foreground hover:bg-white/[0.12]"
             >
-              <IconUsers className="w-4 h-4" />
+              <IconUsers className="size-4" />
               <span className="flex-1">People</span>
             </Link>
             <Link
               to="/lead"
               className="flex items-center rounded gap-2 px-2 py-1 text-muted-foreground hover:bg-white/[0.12]"
             >
-              <IconBuilding className="w-4 h-4" />
+              <IconBuilding className="size-4" />
               <span className="flex-1">Companies</span>
             </Link>
           </div>
@@ -52,7 +52,7 @@ export function Sidebar() {
 
         <div className="py-1">
           <div className="flex items-center gap-1.5 w-full px-2 py-1 text-muted-foreground text-[11px] uppercase tracking-wider font-medium">
-            <IconChevronDown className="w-3 h-3" />
+            <IconChevronDown className="size-3" />
             Workspace
           </div>
           <div className="mt-0.5 space-y-px">
@@ -60,14 +60,14 @@ export function Sidebar() {
               to="/prompt"
               className="flex items-center rounded gap-2 w-full px-2 py-1 text-muted-foreground hover:bg-white/[0.12]"
             >
-              <IconTypography className="w-4 h-4" />
+              <IconTypography className="size-4" />
               <span className="flex-1 text-left">Prompt</span>
             </Link>
             <Link
               to="/scoring"
               className="flex items-center rounded gap-2 w-full px-2 py-1 text-muted-foreground hover:bg-white/[0.12]"
             >
-              <IconTargetArrow className="w-4 h-4" />
+              <IconTargetArrow className="size-4" />
               <span className="flex-1 text-left">Scoring</span>
             </Link>
           </div>

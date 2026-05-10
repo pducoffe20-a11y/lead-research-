@@ -21,7 +21,11 @@ export default tseslint.config(
     },
   },
   {
-    files: ["src/components/ui/**", "src/components/leads/score-bars.tsx", "src/components/selection/selection-provider.tsx"],
+    files: [
+      "src/components/ui/**",
+      "src/components/leads/score-bars.tsx",
+      "src/components/selection/selection-provider.tsx",
+    ],
     rules: {
       "react-refresh/only-export-components": "off",
     },

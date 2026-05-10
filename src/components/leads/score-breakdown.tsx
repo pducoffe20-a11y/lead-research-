@@ -2,7 +2,7 @@
 
 import type { ParsedLeadScore } from "@/lib/types/scoring";
 import { tierConfigs } from "@/lib/types/scoring";
-import { cn } from "@/lib/utils";
+import { cn, formatLongDate } from "@/lib/utils";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { Bars } from "./score-bars";
 
@@ -26,14 +26,7 @@ export function ScoreBreakdown({ score }: ScoreBreakdownProps) {
         <div className="text-xs text-muted-foreground">
           {score.passesRequirements ? "All requirements passed" : "Failed requirements"}
           {score.scoredAt && (
-            <span className="ml-2">
-              · Scored{" "}
-              {new Date(score.scoredAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
+            <span className="ml-2">· Scored {formatLongDate(score.scoredAt)}</span>
           )}
         </div>
       </div>
@@ -46,9 +39,9 @@ export function ScoreBreakdown({ score }: ScoreBreakdownProps) {
               <div key={req.id} className="py-2 border-b border-white/5 last:border-0">
                 <div className="flex items-center gap-2 mb-1">
                   {req.passed ? (
-                    <IconCheck className="w-4 h-4 text-green-500" />
+                    <IconCheck className="size-4 text-green-500" />
                   ) : (
-                    <IconX className="w-4 h-4 text-red-500" />
+                    <IconX className="size-4 text-red-500" />
                   )}
                   <span className="text-sm">{req.name}</span>
                 </div>
@@ -91,34 +84,3 @@ export function ScoreBreakdown({ score }: ScoreBreakdownProps) {
   );
 }
 
-export function ScoreBreakdownCompact({ score }: ScoreBreakdownProps) {
-  const tierConfig = tierConfigs[score.tier];
-  const passedCount = score.requirementResults.filter((r) => r.passed).length;
-  const totalReqs = score.requirementResults.length;
-
-  return (
-    <div className="space-y-3">
-      <div className="space-y-1.5">
-        <div className="flex items-baseline gap-2">
-          <span className={cn("text-lg font-bold tabular-nums", tierConfig.color)}>
-            {score.totalScore}
-          </span>
-          <span className={cn("text-xs font-medium", tierConfig.color)}>{tierConfig.label}</span>
-        </div>
-        <Bars value={score.totalScore} tier={score.tier} size="default" />
-        <div className="text-xs text-muted-foreground">
-          {passedCount}/{totalReqs} requirements
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        {score.scoreBreakdown.slice(0, 3).map((sig) => (
-          <div key={sig.id} className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground truncate">{sig.name}</span>
-            <Bars value={sig.score} tier={score.tier} size="sm" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

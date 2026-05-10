@@ -47,24 +47,28 @@ export function LeadListWithSelection({ groupedLeads, onRefresh }: LeadListWithS
 
   const handleResearch = React.useCallback(
     async (selectedIds: number[]) => {
+      const promises: Promise<boolean>[] = [];
+      for (const leadId of selectedIds) {
+        if (!leadMap.has(leadId)) continue;
+        promises.push(
+          (async () => {
+            try {
+              await startResearch(leadId, handleStreamEvent);
+              return true;
+            } catch (error) {
+              console.error(`Failed to start research for lead ${leadId}:`, error);
+              return false;
+            }
+          })()
+        );
+      }
+      const results = await Promise.all(promises);
+
       let started = 0;
       let failed = 0;
-
-      // Start research for each selected lead
-      for (const leadId of selectedIds) {
-        const lead = leadMap.get(leadId);
-        if (!lead) continue;
-
-        try {
-          // Start research - backend will emit events
-          // Stream logs to Zustand via handleStreamEvent
-          await startResearch(leadId, handleStreamEvent);
-
-          started++;
-        } catch (error) {
-          console.error(`Failed to start research for lead ${leadId}:`, error);
-          failed++;
-        }
+      for (const ok of results) {
+        if (ok) started++;
+        else failed++;
       }
 
       if (started > 0) {
@@ -79,20 +83,28 @@ export function LeadListWithSelection({ groupedLeads, onRefresh }: LeadListWithS
 
   const handleScore = React.useCallback(
     async (selectedIds: number[]) => {
+      const promises: Promise<boolean>[] = [];
+      for (const leadId of selectedIds) {
+        if (!leadMap.has(leadId)) continue;
+        promises.push(
+          (async () => {
+            try {
+              await startScoring(leadId, handleStreamEvent);
+              return true;
+            } catch (error) {
+              console.error(`Failed to start scoring for lead ${leadId}:`, error);
+              return false;
+            }
+          })()
+        );
+      }
+      const results = await Promise.all(promises);
+
       let started = 0;
       let failed = 0;
-
-      for (const leadId of selectedIds) {
-        const lead = leadMap.get(leadId);
-        if (!lead) continue;
-
-        try {
-          await startScoring(leadId, handleStreamEvent);
-          started++;
-        } catch (error) {
-          console.error(`Failed to start scoring for lead ${leadId}:`, error);
-          failed++;
-        }
+      for (const ok of results) {
+        if (ok) started++;
+        else failed++;
       }
 
       if (started > 0) {
@@ -171,13 +183,13 @@ function LeadRow({ lead }: { lead: LeadWithScore }) {
 
   return (
     <SelectableRow id={lead.id}>
-      <StatusIcon className={`w-4 h-4 ${userConfig.color} shrink-0`} />
+      <StatusIcon className={`size-4 ${userConfig.color} shrink-0`} />
 
       <Link to={`/lead/${lead.id}`} className="flex-1 min-w-0 flex items-center gap-1.5">
         {lead.companyName && (
           <>
             <span className="font-medium truncate">{lead.companyName}</span>
-            <IconChevronRight className="w-3 h-3 text-muted-foreground shrink-0" />
+            <IconChevronRight className="size-3 text-muted-foreground shrink-0" />
           </>
         )}
         <span className="truncate text-muted-foreground">

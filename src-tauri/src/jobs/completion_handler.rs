@@ -13,6 +13,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tauri::AppHandle;
 use serde::{Deserialize, Serialize};
+use rusqlite::OptionalExtension;
 
 use crate::db;
 use crate::events;
@@ -317,13 +318,9 @@ impl CompletionHandler {
             ParsedOutput::CompanyResearch { profile, people, enrichment } => {
                 let lead_id = metadata.entity_id;
 
-                // Update people if available
+                // Upsert people by (lead_id, first_name, last_name) so existing IDs and
+                // already-researched data survive a re-run of company research.
                 if let Some(people_data) = people {
-                    // Delete existing people
-                    tx.execute("DELETE FROM people WHERE lead_id = ?1", rusqlite::params![lead_id])
-                        .map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
-
-                    // Insert new people with enrichment fields
                     let now = chrono::Utc::now().timestamp();
                     for p in people_data {
                         let first_name = extract_first_name(p);
@@ -334,20 +331,46 @@ impl CompletionHandler {
                         let management_level = p.get("managementLevel").and_then(|v| v.as_str());
                         let year_joined = p.get("yearJoined").and_then(|v| v.as_i64());
 
-                        tx.execute(
-                            "INSERT INTO people (first_name, last_name, email, title, linkedin_url, management_level, year_joined, lead_id, research_status, user_status, created_at)
-                             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 'pending', 'new', ?9)",
-                            rusqlite::params![first_name, last_name, email, title, linkedin_url, management_level, year_joined, lead_id, now],
-                        ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                        let existing_id: Option<i64> = tx.query_row(
+                            "SELECT id FROM people WHERE lead_id = ?1 AND first_name = ?2 AND last_name = ?3 LIMIT 1",
+                            rusqlite::params![lead_id, first_name, last_name],
+                            |row| row.get(0),
+                        ).optional().map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+
+                        if let Some(id) = existing_id {
+                            // Only fill in NULL fields — preserve any user edits or prior enrichment
+                            tx.execute(
+                                "UPDATE people SET
+                                    email = COALESCE(email, ?1),
+                                    title = COALESCE(title, ?2),
+                                    linkedin_url = COALESCE(linkedin_url, ?3),
+                                    management_level = COALESCE(management_level, ?4),
+                                    year_joined = COALESCE(year_joined, ?5)
+                                 WHERE id = ?6",
+                                rusqlite::params![email, title, linkedin_url, management_level, year_joined, id],
+                            ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                        } else {
+                            tx.execute(
+                                "INSERT INTO people (first_name, last_name, email, title, linkedin_url, management_level, year_joined, lead_id, research_status, user_status, created_at)
+                                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 'pending', 'new', ?9)",
+                                rusqlite::params![first_name, last_name, email, title, linkedin_url, management_level, year_joined, lead_id, now],
+                            ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                        }
                     }
                 }
 
                 // Update lead with company profile
                 let now = chrono::Utc::now().timestamp();
-                tx.execute(
+                let rows = tx.execute(
                     "UPDATE leads SET research_status = ?1, company_profile = ?2, researched_at = ?3 WHERE id = ?4",
                     rusqlite::params!["completed", profile, now, lead_id],
                 ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                if rows == 0 {
+                    return Err(CompletionError::ValidationError(format!(
+                        "Lead {} no longer exists; company research output discarded",
+                        lead_id
+                    )));
+                }
 
                 // Apply enrichment data if available (only updates NULL fields)
                 if let Some(e) = enrichment {
@@ -358,10 +381,16 @@ impl CompletionHandler {
             ParsedOutput::PersonResearch { profile, enrichment } => {
                 let person_id = metadata.entity_id;
                 let now = chrono::Utc::now().timestamp();
-                tx.execute(
+                let rows = tx.execute(
                     "UPDATE people SET research_status = ?1, person_profile = ?2, researched_at = ?3 WHERE id = ?4",
                     rusqlite::params!["completed", profile, now, person_id],
                 ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                if rows == 0 {
+                    return Err(CompletionError::ValidationError(format!(
+                        "Person {} no longer exists; research output discarded",
+                        person_id
+                    )));
+                }
 
                 // Apply enrichment data if available (only updates NULL fields)
                 if let Some(e) = enrichment {
@@ -409,9 +438,45 @@ impl CompletionHandler {
                     .map(|v| v.to_string())
                     .unwrap_or_else(|| "[]".to_string());
 
-                let total_score = score_data.get("totalScore")
-                    .and_then(|v| v.as_i64())
-                    .unwrap_or(0);
+                let mut total_score = score_data.get("totalScore")
+                    .and_then(|v| {
+                        // Try as float first (handles both integer and float JSON values)
+                        v.as_f64()
+                            .map(|f| f.round() as i64)
+                            .or_else(|| v.as_i64()) // Fallback to direct integer parsing
+                    })
+                    .unwrap_or_else(|| {
+                        eprintln!("[completion_handler] Warning: totalScore missing or invalid in score data for lead {}, defaulting to 0", lead_id);
+                        0
+                    });
+
+                // Defensive recalculation: if totalScore is 0 but requirements passed, recalculate from breakdown
+                if total_score == 0 && passes_requirements {
+                    if let Some(breakdown) = score_data.get("scoreBreakdown").and_then(|v| v.as_array()) {
+                        if !breakdown.is_empty() {
+                            let calculated_score: f64 = breakdown.iter()
+                                .filter_map(|item| {
+                                    let score = item.get("score").and_then(|v| v.as_f64())?;
+                                    let weight = item.get("weight").and_then(|v| v.as_f64())?;
+                                    Some(score * weight)
+                                })
+                                .sum();
+
+                            let total_weight: f64 = breakdown.iter()
+                                .filter_map(|item| item.get("weight").and_then(|v| v.as_f64()))
+                                .sum();
+
+                            if total_weight > 0.0 {
+                                let recalculated = (calculated_score / total_weight).round() as i64;
+                                if recalculated > 0 {
+                                    eprintln!("[completion_handler] Recalculated totalScore from breakdown: {} (was 0) for lead {}",
+                                             recalculated, lead_id);
+                                    total_score = recalculated;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 let score_breakdown = score_data.get("scoreBreakdown")
                     .map(|v| v.to_string())
@@ -424,6 +489,10 @@ impl CompletionHandler {
 
                 let scoring_notes = score_data.get("scoringNotes")
                     .and_then(|v| v.as_str());
+
+                // Enhanced logging for score parsing verification
+                eprintln!("[completion_handler] Parsed score for lead {}: passesRequirements={}, totalScore={}, tier={}",
+                         lead_id, passes_requirements, total_score, tier);
 
                 let now = chrono::Utc::now().timestamp();
 
@@ -443,10 +512,16 @@ impl CompletionHandler {
             ParsedOutput::Conversation { topics } => {
                 let person_id = metadata.entity_id;
                 let now = chrono::Utc::now().timestamp();
-                tx.execute(
+                let rows = tx.execute(
                     "UPDATE people SET conversation_topics = ?1, conversation_generated_at = ?2 WHERE id = ?3",
                     rusqlite::params![topics, now, person_id],
                 ).map_err(|e| CompletionError::DatabaseError(e.to_string()))?;
+                if rows == 0 {
+                    return Err(CompletionError::ValidationError(format!(
+                        "Person {} no longer exists; conversation output discarded",
+                        person_id
+                    )));
+                }
             }
             ParsedOutput::LeadFinder { leads } => {
                 let now = chrono::Utc::now().timestamp();

@@ -33,7 +33,7 @@ export function useStreamSubscription() {
       // Get current jobs from query cache
       const jobs = queryClient.getQueryData<Job[]>(queryKeys.jobsRecent(50)) ?? [];
       // Sort by creation time (oldest first) to match tab order
-      const sortedJobs = [...jobs].sort((a, b) => a.createdAt - b.createdAt);
+      const sortedJobs = jobs.toSorted((a, b) => a.createdAt - b.createdAt);
       const currentIndex = sortedJobs.findIndex((j) => j.id === jobId);
 
       // Find next tab to select (prefer next, then previous)

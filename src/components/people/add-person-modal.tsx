@@ -58,7 +58,14 @@ export function AddPersonModal({ leads, onSuccess }: AddPersonModalProps) {
         leadId: formData.leadId ? parseInt(formData.leadId) : undefined,
       });
       setOpen(false);
-      setFormData({ firstName: "", lastName: "", email: "", title: "", linkedinUrl: "", leadId: "" });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        title: "",
+        linkedinUrl: "",
+        leadId: "",
+      });
       onSuccess?.();
       toast.success("Person added successfully");
     } catch {
@@ -74,7 +81,7 @@ export function AddPersonModal({ leads, onSuccess }: AddPersonModalProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <IconPlus className="w-3.5 h-3.5" />
+          <IconPlus className="size-3.5" />
           Add Person
         </Button>
       </DialogTrigger>
@@ -154,7 +161,7 @@ export function AddPersonModal({ leads, onSuccess }: AddPersonModalProps) {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading || !isValid}>
-              {loading && <IconLoader2 className="w-3.5 h-3.5 animate-spin" />}
+              {loading && <IconLoader2 className="size-3.5 animate-spin" />}
               {loading ? "Adding..." : "Add Person"}
             </Button>
           </DialogFooter>

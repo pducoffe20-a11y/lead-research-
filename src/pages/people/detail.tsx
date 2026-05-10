@@ -20,6 +20,7 @@ import {
   SidebarProperty,
 } from "@/components/layout/entity-detail-layout";
 import { usePersonDetail } from "@/lib/hooks/use-people";
+import { formatShortDate } from "@/lib/utils";
 
 export default function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +35,7 @@ export default function PersonDetailPage() {
   if (isLoading && !person) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <IconLoader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        <IconLoader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -64,17 +65,17 @@ export default function PersonDetailPage() {
     <>
       {person.researchedAt && (
         <ActivityItem
-          icon={<IconCircleCheck className="w-3.5 h-3.5 text-green-500" />}
+          icon={<IconCircleCheck className="size-3.5 text-green-500" />}
           iconBgColor="bg-green-500/20"
           label="Research completed"
-          date={new Date(person.researchedAt)}
+          timestamp={person.researchedAt}
         />
       )}
       <ActivityItem
-        icon={<IconUser className="w-3.5 h-3.5 text-primary" />}
+        icon={<IconUser className="size-3.5 text-primary" />}
         iconBgColor="bg-primary/20"
         label="Person added"
-        date={new Date(person.createdAt)}
+        timestamp={person.createdAt}
       />
     </>
   );
@@ -97,7 +98,7 @@ export default function PersonDetailPage() {
         {person.title && (
           <SidebarProperty label="Title">
             <div className="flex items-center gap-1.5 text-sm">
-              <IconBriefcase className="w-4 h-4 text-muted-foreground" />
+              <IconBriefcase className="size-4 text-muted-foreground" />
               <span>{person.title}</span>
             </div>
           </SidebarProperty>
@@ -114,7 +115,7 @@ export default function PersonDetailPage() {
         {person.yearJoined && (
           <SidebarProperty label="Joined">
             <div className="flex items-center gap-1.5 text-sm">
-              <IconCalendar className="w-4 h-4 text-muted-foreground" />
+              <IconCalendar className="size-4 text-muted-foreground" />
               <span>{person.yearJoined}</span>
             </div>
           </SidebarProperty>
@@ -130,16 +131,18 @@ export default function PersonDetailPage() {
                 to={`/lead/${person.leadId}`}
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <IconBuilding className="w-4 h-4" />
+                <IconBuilding className="size-4" />
                 <span>{person.companyName}</span>
               </Link>
               {person.companyIndustry && (
-                <div className="mt-2 text-xs text-muted-foreground/70">{person.companyIndustry}</div>
+                <div className="mt-2 text-xs text-muted-foreground/70">
+                  {person.companyIndustry}
+                </div>
               )}
             </>
           ) : (
             <div className="flex items-center gap-2 text-sm text-muted-foreground/50">
-              <IconBuilding className="w-4 h-4" />
+              <IconBuilding className="size-4" />
               <span className="italic">No company</span>
             </div>
           )}
@@ -156,7 +159,7 @@ export default function PersonDetailPage() {
                   href={`mailto:${person.email}`}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <IconMail className="w-4 h-4" />
+                  <IconMail className="size-4" />
                   <span className="truncate">{person.email}</span>
                 </a>
               )}
@@ -167,7 +170,7 @@ export default function PersonDetailPage() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <IconBrandLinkedin className="w-4 h-4" />
+                  <IconBrandLinkedin className="size-4" />
                   <span>LinkedIn</span>
                 </a>
               )}
@@ -178,14 +181,8 @@ export default function PersonDetailPage() {
         {person.researchedAt && (
           <div className="border-t border-white/5 pt-4 mt-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <IconCalendar className="w-3.5 h-3.5" />
-              <span>
-                Researched{" "}
-                {new Date(person.researchedAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
+              <IconCalendar className="size-3.5" />
+              <span>Researched {formatShortDate(person.researchedAt)}</span>
             </div>
           </div>
         )}

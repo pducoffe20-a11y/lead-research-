@@ -29,6 +29,7 @@ tsc -b
 Qual is a **Tauri 2 desktop application** for B2B lead research and qualification. It uses Claude CLI as an AI backend for company/person research, scoring, and conversation generation.
 
 ### Tech Stack
+
 - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS 4
 - **Backend**: Rust + Tauri 2 + SQLite (rusqlite with WAL mode)
 - **State**: Zustand with Immer middleware
@@ -69,6 +70,7 @@ src-tauri/src/               # Rust backend
 ### Job System
 
 Research/scoring jobs spawn Claude CLI subprocesses:
+
 - Max 5 concurrent jobs (semaphore-based)
 - 10-minute timeout per job
 - Output streams to frontend via Tauri channels
@@ -89,12 +91,12 @@ Tables: `leads`, `people`, `prompts`, `scoring_config`, `lead_scores`
 
 ## Important Files
 
-| Purpose | Path |
-|---------|------|
-| App routing | `src/App.tsx` |
-| Lead store | `src/lib/store/leads-store.ts` |
-| Tauri commands | `src/lib/tauri/commands.ts` |
-| Event bridge | `src/lib/tauri/event-bridge.ts` |
-| Backend setup | `src-tauri/src/lib.rs` |
-| Job queue | `src-tauri/src/jobs/queue.rs` |
-| DB schema | `src-tauri/src/db/schema.rs` |
+| Purpose        | Path                            |
+| -------------- | ------------------------------- |
+| App routing    | `src/App.tsx`                   |
+| Lead store     | `src/lib/store/leads-store.ts`  |
+| Tauri commands | `src/lib/tauri/commands.ts`     |
+| Event bridge   | `src/lib/tauri/event-bridge.ts` |
+| Backend setup  | `src-tauri/src/lib.rs`          |
+| Job queue      | `src-tauri/src/jobs/queue.rs`   |
+| DB schema      | `src-tauri/src/db/schema.rs`    |

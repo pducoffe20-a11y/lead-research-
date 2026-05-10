@@ -48,7 +48,7 @@ export function FindLeadsModal({ onSuccess }: FindLeadsModalProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <IconSearch className="w-3.5 h-3.5" />
+          <IconSearch className="size-3.5" />
           Find Leads
         </Button>
       </DialogTrigger>
@@ -70,7 +70,7 @@ export function FindLeadsModal({ onSuccess }: FindLeadsModalProps) {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading || !icpDescription.trim()}>
-              {loading && <IconLoader2 className="w-3.5 h-3.5 animate-spin" />}
+              {loading && <IconLoader2 className="size-3.5 animate-spin" />}
               {loading ? "Starting..." : "Find Leads"}
             </Button>
           </DialogFooter>

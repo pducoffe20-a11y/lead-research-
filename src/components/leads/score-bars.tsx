@@ -44,7 +44,7 @@ export function Bars({ value, tier, size = "default" }: BarsProps) {
         const isPartial = index === filledBars && partialFill > 0;
 
         return (
-          <div key={index} className={cn("relative bg-white/10", barWidth, barHeight)}>
+          <div key={`bar-${index}`} className={cn("relative bg-white/10", barWidth, barHeight)}>
             {(isFilled || isPartial) && (
               <div
                 className={cn("absolute bottom-0 left-0 right-0", tierColor)}
@@ -107,5 +107,3 @@ export function ScoreCard({ score, className }: ScoreCardProps) {
     </div>
   );
 }
-
-export { tierColors, tierTextColors };

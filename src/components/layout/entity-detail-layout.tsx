@@ -47,12 +47,15 @@ export function EntityDetailLayout({
 }: EntityDetailLayoutProps) {
   return (
     <>
-      <header data-tauri-drag-region className="h-10 border-b border-white/5 flex items-center px-3 gap-2">
+      <header
+        data-tauri-drag-region
+        className="h-10 border-b border-white/5 flex items-center px-3 gap-2"
+      >
         <Link
           to={backHref}
           className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
         >
-          <IconArrowLeft className="w-4 h-4" />
+          <IconArrowLeft className="size-4" />
         </Link>
         <div className="flex items-center gap-1.5 text-sm">
           <Link to={backHref} className="text-muted-foreground hover:text-foreground">
@@ -64,10 +67,10 @@ export function EntityDetailLayout({
 
         <div className="flex items-center gap-1 ml-2">
           <button className="p-1 rounded hover:bg-white/5 text-muted-foreground">
-            <IconStar className="w-4 h-4" />
+            <IconStar className="size-4" />
           </button>
           <button className="p-1 rounded hover:bg-white/5 text-muted-foreground">
-            <IconDotsVertical className="w-4 h-4" />
+            <IconDotsVertical className="size-4" />
           </button>
         </div>
 
@@ -81,13 +84,13 @@ export function EntityDetailLayout({
             to={prevUrl ?? "#"}
             className={`p-1 rounded hover:bg-white/5 ${!prevUrl ? "opacity-30 pointer-events-none" : ""}`}
           >
-            <IconChevronUp className="w-4 h-4" />
+            <IconChevronUp className="size-4" />
           </Link>
           <Link
             to={nextUrl ?? "#"}
             className={`p-1 rounded hover:bg-white/5 ${!nextUrl ? "opacity-30 pointer-events-none" : ""}`}
           >
-            <IconChevronDown className="w-4 h-4" />
+            <IconChevronDown className="size-4" />
           </Link>
         </div>
       </header>
@@ -131,29 +134,30 @@ interface ActivityItemProps {
   icon: React.ReactNode;
   iconBgColor: string;
   label: string;
-  date: Date;
+  timestamp: number;
 }
 
-export function ActivityItem({ icon, iconBgColor, label, date }: ActivityItemProps) {
+export function ActivityItem({ icon, iconBgColor, label, timestamp }: ActivityItemProps) {
+  const formatted = formatActivityDate(timestamp);
   return (
     <div className="flex items-start gap-3 text-sm">
-      <div
-        className={`w-6 h-6 rounded-full ${iconBgColor} flex items-center justify-center mt-0.5`}
-      >
+      <div className={`size-6 rounded-full ${iconBgColor} flex items-center justify-center mt-0.5`}>
         {icon}
       </div>
       <div>
         <p className="text-muted-foreground">{label}</p>
-        <p className="text-xs text-muted-foreground/60 mt-0.5">
-          {date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
+        <p className="text-xs text-muted-foreground/60 mt-0.5">{formatted}</p>
       </div>
     </div>
   );
+}
+
+function formatActivityDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 interface SidebarSectionProps {

@@ -4,10 +4,10 @@ import { useState, ReactNode } from "react";
 import { IconChevronDown, IconChevronRight, IconPlus } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import {
-  STATUS_CONFIG,
+  RESEARCH_STATUS_CONFIG,
   LEAD_USER_STATUS_CONFIG,
   PERSON_USER_STATUS_CONFIG,
-  type StatusType,
+  type ResearchStatusType,
   type LeadUserStatusType,
   type PersonUserStatusType,
 } from "@/lib/constants/status-config";
@@ -18,7 +18,7 @@ interface CollapsibleStatusGroupProps {
   status: string;
   count: number;
   children: ReactNode;
-  defaultOpen?: boolean;
+  startsOpen?: boolean;
   configType?: StatusConfigType;
 }
 
@@ -26,10 +26,10 @@ export function CollapsibleStatusGroup({
   status,
   count,
   children,
-  defaultOpen = true,
+  startsOpen = true,
   configType = "research",
 }: CollapsibleStatusGroupProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState(() => startsOpen);
 
   // Get the appropriate config based on type
   const config =
@@ -37,7 +37,7 @@ export function CollapsibleStatusGroup({
       ? LEAD_USER_STATUS_CONFIG[status as LeadUserStatusType]
       : configType === "person_user"
         ? PERSON_USER_STATUS_CONFIG[status as PersonUserStatusType]
-        : STATUS_CONFIG[status as StatusType];
+        : RESEARCH_STATUS_CONFIG[status as ResearchStatusType];
 
   const StatusIcon = config.icon;
 
@@ -49,17 +49,17 @@ export function CollapsibleStatusGroup({
           className="w-4 shrink-0 flex items-center justify-center hover:bg-white/10 transition-colors"
         >
           {isOpen ? (
-            <IconChevronDown className="w-3 h-3 text-muted-foreground" />
+            <IconChevronDown className="size-3 text-muted-foreground" />
           ) : (
-            <IconChevronRight className="w-3 h-3 text-muted-foreground" />
+            <IconChevronRight className="size-3 text-muted-foreground" />
           )}
         </button>
-        <StatusIcon className={cn("w-4 h-4 shrink-0", config.color)} />
+        <StatusIcon className={cn("size-4 shrink-0", config.color)} />
         <span className="font-medium">{config.label}</span>
         <span className="text-muted-foreground text-xs">{count}</span>
         <div className="flex-1" />
         <button className="p-1 hover:bg-white/10 opacity-0 group-hover/status:opacity-100 transition-opacity">
-          <IconPlus className="w-3.5 h-3.5 text-muted-foreground" />
+          <IconPlus className="size-3.5 text-muted-foreground" />
         </button>
       </div>
 

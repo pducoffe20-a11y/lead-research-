@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { useStreamPanelStore } from "@/lib/store/stream-panel-store";
 import { useStreamTabs } from "@/lib/hooks/use-stream-tabs";
 import { useJob } from "@/lib/query/use-job-query";
@@ -20,11 +19,7 @@ export function StreamPanelHeader() {
   // Fetch active job details
   const { data: activeJob } = useJob(activeTabId ?? "", !!activeTabId);
 
-  // Count running tabs
-  const runningCount = useMemo(
-    () => tabs.filter((t) => t.status === "running" || t.status === "queued").length,
-    [tabs]
-  );
+  const runningCount = tabs.filter((t) => t.status === "running" || t.status === "queued").length;
 
   const handleCloseTab = async (jobId: string, isRunning: boolean) => {
     // Delete all job data when closing a tab
@@ -40,7 +35,7 @@ export function StreamPanelHeader() {
   };
 
   return (
-    <div className="border-t border-white/10 bg-black flex items-center justify-between border-b border-white/5 h-9 shrink-0">
+    <div className="border-t border-white/10 bg-zinc-950 flex items-center justify-between border-b border-white/5 h-9 shrink-0">
       <StreamPanelTabs onCloseTab={handleCloseTab} />
 
       <div className="flex items-center gap-2 px-2">
@@ -51,23 +46,24 @@ export function StreamPanelHeader() {
             onClick={handleStopCurrent}
             className="h-6 px-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10"
           >
-            <IconPlayerStop className="h-3 w-3 mr-1" />
+            <IconPlayerStop className="size-3 mr-1" />
             Stop
           </Button>
         )}
 
         {runningCount > 0 && (
           <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            <span className="size-1.5 rounded-full bg-blue-400 animate-pulse" />
             {runningCount} running
           </span>
         )}
 
         <button
           onClick={toggle}
+          aria-label={isOpen ? "Collapse panel" : "Expand panel"}
           className="p-1 rounded hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors"
         >
-          {isOpen ? <IconChevronDown className="h-4 w-4" /> : <IconChevronUp className="h-4 w-4" />}
+          {isOpen ? <IconChevronDown className="size-4" /> : <IconChevronUp className="size-4" />}
         </button>
       </div>
     </div>

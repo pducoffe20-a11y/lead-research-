@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { IconBrain, IconBolt, IconChevronDown } from "@tabler/icons-react";
+import { IconBrain, IconBolt, IconChevronDown, IconLoader2 } from "@tabler/icons-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -24,6 +24,7 @@ export function ModelSelector() {
   const setSelectedModel = useSettingsStore((state) => state.setSelectedModel);
   const loadSettings = useSettingsStore((state) => state.loadSettings);
   const isInitialized = useSettingsStore((state) => state.isInitialized);
+  const isUpdatingModel = useSettingsStore((state) => state.isUpdatingModel);
 
   useEffect(() => {
     loadSettings();
@@ -34,7 +35,7 @@ export function ModelSelector() {
   if (!isInitialized) {
     return (
       <div className="flex items-center gap-2 w-full px-2 py-1 text-muted-foreground text-sm">
-        <IconBolt className="w-3.5 h-3.5" />
+        <IconBolt className="size-3.5" />
         <span>Sonnet</span>
       </div>
     );
@@ -43,21 +44,32 @@ export function ModelSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 w-full px-2 py-1 rounded text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors text-sm outline-none">
-          <ModelIcon model={currentModel.value} className="w-3.5 h-3.5" />
+        <button
+          className="flex items-center gap-2 w-full px-2 py-1 rounded text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors text-sm outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          disabled={isUpdatingModel}
+        >
+          {isUpdatingModel ? (
+            <IconLoader2 className="size-3.5 animate-spin" />
+          ) : (
+            <ModelIcon model={currentModel.value} className="size-3.5" />
+          )}
           <span className="flex-1 text-left">{currentModel.label}</span>
-          <IconChevronDown className="w-3 h-3" />
+          <IconChevronDown className="size-3" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-40">
         <DropdownMenuLabel>Claude Model</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={selectedModel}
-          onValueChange={(value) => setSelectedModel(value as ClaudeModel)}
+          onValueChange={(value) => !isUpdatingModel && setSelectedModel(value as ClaudeModel)}
         >
           {MODEL_OPTIONS.map((option) => (
-            <DropdownMenuRadioItem key={option.value} value={option.value}>
-              <ModelIcon model={option.value} className="w-4 h-4" />
+            <DropdownMenuRadioItem
+              key={option.value}
+              value={option.value}
+              disabled={isUpdatingModel}
+            >
+              <ModelIcon model={option.value} className="size-4" />
               <span>{option.label}</span>
             </DropdownMenuRadioItem>
           ))}

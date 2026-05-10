@@ -30,8 +30,8 @@ export function ResearchStatusBadge({
       <StatusIcon
         className={cn(
           config.color,
-          size === "sm" && "w-3.5 h-3.5",
-          size === "md" && "w-4 h-4",
+          size === "sm" && "size-3.5",
+          size === "md" && "size-4",
           isSpinning && "animate-spin"
         )}
       />

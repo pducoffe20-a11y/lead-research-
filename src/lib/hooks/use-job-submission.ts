@@ -15,23 +15,20 @@ export function useJobSubmission() {
    * @param jobFn - Async function that starts the job.
    * @returns Promise that resolves when the job submission completes
    */
-  const submit = useCallback(
-    async <T>(jobFn: () => Promise<T>): Promise<T | undefined> => {
-      // Guard against double-clicks using ref (synchronous check)
-      if (isSubmittingRef.current) {
-        return undefined;
-      }
+  const submit = useCallback(async <T>(jobFn: () => Promise<T>): Promise<T | undefined> => {
+    // Guard against double-clicks using ref (synchronous check)
+    if (isSubmittingRef.current) {
+      return undefined;
+    }
 
-      isSubmittingRef.current = true;
+    isSubmittingRef.current = true;
 
-      try {
-        return await jobFn();
-      } finally {
-        isSubmittingRef.current = false;
-      }
-    },
-    []
-  );
+    try {
+      return await jobFn();
+    } finally {
+      isSubmittingRef.current = false;
+    }
+  }, []);
 
   return {
     submit,

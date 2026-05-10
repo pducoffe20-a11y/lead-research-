@@ -29,10 +29,7 @@ export function StreamPanelWrapper({ children }: { children: React.ReactNode }) 
         disabled={false}
       />
 
-      <ResizablePanel
-        defaultSize={35}
-        minSize={15}
-      >
+      <ResizablePanel defaultSize={35} minSize={15}>
         <StreamPanel />
       </ResizablePanel>
     </ResizablePanelGroup>

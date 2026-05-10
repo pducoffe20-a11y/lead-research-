@@ -17,17 +17,17 @@ interface EmptyStateProps {
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4">
-        <Icon className="w-6 h-6 text-muted-foreground" />
+      <div className="size-12 rounded-full bg-white/5 flex items-center justify-center mb-4">
+        <Icon className="size-6 text-muted-foreground" />
       </div>
       <h3 className="text-sm font-medium mb-1">{title}</h3>
       <p className="text-sm text-muted-foreground max-w-sm mb-4">{description}</p>
       {action && (
         <Button onClick={action.onClick} disabled={action.isLoading}>
           {action.isLoading ? (
-            <IconLoader2 className="h-4 w-4 animate-spin" />
+            <IconLoader2 className="size-4 animate-spin" />
           ) : action.icon ? (
-            <action.icon className="h-4 w-4" />
+            <action.icon className="size-4" />
           ) : null}
           {action.isLoading ? action.loadingLabel || "Starting..." : action.label}
         </Button>
@@ -44,8 +44,8 @@ interface SmallEmptyStateProps {
 export function SmallEmptyState({ icon: Icon, message }: SmallEmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-3">
-        <Icon className="w-5 h-5 text-muted-foreground" />
+      <div className="size-10 rounded-full bg-white/5 flex items-center justify-center mb-3">
+        <Icon className="size-5 text-muted-foreground" />
       </div>
       <p className="text-sm text-muted-foreground">{message}</p>
     </div>

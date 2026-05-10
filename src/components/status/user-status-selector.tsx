@@ -75,9 +75,9 @@ export function UserStatusSelector(props: UserStatusSelectorProps) {
             isPending && "opacity-50 pointer-events-none"
           )}
         >
-          <StatusIcon className={cn("w-4 h-4", config.color)} />
+          <StatusIcon className={cn("size-4", config.color)} />
           <span className="flex-1 text-left">{config.label}</span>
-          <IconChevronDown className="w-4 h-4 text-muted-foreground" />
+          <IconChevronDown className="size-4 text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-48">
@@ -87,7 +87,7 @@ export function UserStatusSelector(props: UserStatusSelectorProps) {
             const ItemIcon = itemConfig.icon;
             return (
               <DropdownMenuRadioItem key={status} value={status}>
-                <ItemIcon className={cn("w-4 h-4", itemConfig.color)} />
+                <ItemIcon className={cn("size-4", itemConfig.color)} />
                 <span>{itemConfig.label}</span>
               </DropdownMenuRadioItem>
             );

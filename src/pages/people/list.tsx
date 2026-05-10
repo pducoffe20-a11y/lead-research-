@@ -15,10 +15,13 @@ export default function PeopleListPage() {
   const { leads } = useLeadsForSelect();
 
   // Group people by user status
-  const groupedPeople = PERSON_USER_STATUS_ORDER.reduce((acc, status) => {
-    acc[status] = [];
-    return acc;
-  }, {} as Record<PersonUserStatusType, PersonWithCompany[]>);
+  const groupedPeople = PERSON_USER_STATUS_ORDER.reduce(
+    (acc, status) => {
+      acc[status] = [];
+      return acc;
+    },
+    {} as Record<PersonUserStatusType, PersonWithCompany[]>
+  );
 
   for (const person of people) {
     const status = validatePersonUserStatus(person.userStatus);
@@ -41,14 +44,17 @@ export default function PeopleListPage() {
   if (isLoading && people.length === 0) {
     return (
       <>
-        <header data-tauri-drag-region className="h-10 border-b border-white/5 flex items-center px-3 gap-1">
+        <header
+          data-tauri-drag-region
+          className="h-10 border-b border-white/5 flex items-center px-3 gap-1"
+        >
           <div className="flex items-center rounded gap-1 px-2 py-1 bg-white/10 text-sm">
-            <IconUsers className="w-3.5 h-3.5" />
+            <IconUsers className="size-3.5" />
             <span>All People</span>
           </div>
         </header>
         <div className="flex items-center justify-center h-64">
-          <IconLoader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          <IconLoader2 className="size-6 animate-spin text-muted-foreground" />
         </div>
       </>
     );
@@ -56,9 +62,12 @@ export default function PeopleListPage() {
 
   return (
     <>
-      <header data-tauri-drag-region className="h-10 border-b border-white/5 flex items-center px-3 gap-1">
+      <header
+        data-tauri-drag-region
+        className="h-10 border-b border-white/5 flex items-center px-3 gap-1"
+      >
         <div className="flex items-center rounded gap-1 px-2 py-1 bg-white/10 text-sm">
-          <IconUsers className="w-3.5 h-3.5" />
+          <IconUsers className="size-3.5" />
           <span>All People</span>
         </div>
         <div className="flex-1" />
@@ -67,7 +76,7 @@ export default function PeopleListPage() {
 
       <div className="h-9 border-b border-white/5 flex items-center px-3 gap-2">
         <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground px-2">
-          <IconSearch className="w-3.5 h-3.5 mr-1" />
+          <IconSearch className="size-3.5 mr-1" />
           Filter
         </Button>
       </div>

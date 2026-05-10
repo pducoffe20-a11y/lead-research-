@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { IconChevronDown } from "@tabler/icons-react";
 import { OnboardingStep, type OnboardingStepData } from "./onboarding-step";
 import type { OnboardingStatus } from "@/lib/tauri/types";
@@ -79,7 +79,7 @@ export function OnboardingChecklist({ status }: OnboardingChecklistProps) {
   }
 
   return (
-    <div className="px-2 py-2 border-t border-white/5">
+    <div className="p-2 border-t border-white/5">
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="flex items-center justify-between w-full px-2 py-1 text-left hover:bg-white/5 rounded transition-colors"
@@ -91,15 +91,15 @@ export function OnboardingChecklist({ status }: OnboardingChecklistProps) {
           <span className="text-[11px] text-muted-foreground">
             {completedCount}/{steps.length}
           </span>
-          <motion.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.2 }}>
-            <IconChevronDown className="w-3 h-3 text-muted-foreground" />
-          </motion.div>
+          <m.div animate={{ rotate: isCollapsed ? -90 : 0 }} transition={{ duration: 0.2 }}>
+            <IconChevronDown className="size-3 text-muted-foreground" />
+          </m.div>
         </div>
       </button>
 
       <AnimatePresence>
         {!isCollapsed && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -119,7 +119,7 @@ export function OnboardingChecklist({ status }: OnboardingChecklistProps) {
                 />
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

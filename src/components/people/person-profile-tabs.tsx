@@ -70,7 +70,7 @@ export function PersonProfileTabs({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <IconUser className="w-4 h-4" />
+            <IconUser className="size-4" />
             Profile
           </button>
           <button
@@ -81,26 +81,36 @@ export function PersonProfileTabs({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <IconMessageCircle className="w-4 h-4" />
+            <IconMessageCircle className="size-4" />
             Conversation
           </button>
         </div>
         {showProfileButton && (
-          <Button variant="outline" size="sm" onClick={handleResearch} disabled={isResearchJobActive}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleResearch}
+            disabled={isResearchJobActive}
+          >
             {isResearchJobActive ? (
-              <IconLoader2 className="h-4 w-4 animate-spin" />
+              <IconLoader2 className="size-4 animate-spin" />
             ) : (
-              <IconRefresh className="h-4 w-4" />
+              <IconRefresh className="size-4" />
             )}
             {isResearchJobActive ? "Researching..." : "Re-run Research"}
           </Button>
         )}
         {showConversationButton && (
-          <Button variant="outline" size="sm" onClick={handleConversation} disabled={isConversationJobActive}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleConversation}
+            disabled={isConversationJobActive}
+          >
             {isConversationJobActive ? (
-              <IconLoader2 className="h-4 w-4 animate-spin" />
+              <IconLoader2 className="size-4 animate-spin" />
             ) : (
-              <IconRefresh className="h-4 w-4" />
+              <IconRefresh className="size-4" />
             )}
             {isConversationJobActive ? "Generating..." : "Regenerate"}
           </Button>
