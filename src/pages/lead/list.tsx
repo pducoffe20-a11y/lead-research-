@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { IconSearch, IconBuilding } from "@tabler/icons-react";
 import { AddLeadModal } from "@/components/leads/add-lead-modal";
 import { FindLeadsModal } from "@/components/leads/find-leads-modal";
+import { ExportLeadsButton } from "@/components/leads/export-leads-button";
 import { LeadListWithSelection } from "@/components/leads/lead-list-with-selection";
 import { useLeadsWithScores } from "@/lib/hooks/use-leads";
 import type { LeadWithScore } from "@/lib/tauri/types";
@@ -75,6 +76,7 @@ export default function LeadListPage() {
           <span>All Companies</span>
         </div>
         <div className="flex-1" data-tauri-drag-region />
+        <ExportLeadsButton leads={leads} />
         <FindLeadsModal onSuccess={refresh} />
         <AddLeadModal onSuccess={refresh} />
       </header>
